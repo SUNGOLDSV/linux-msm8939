@@ -78,7 +78,7 @@
 		};
 	};
 	soc {
-		sdhci@7824000 {
+		&sdhc_1 {
 			status = "okay";
 
 			vmmc-supply = <&pm8916_l8>;
@@ -96,7 +96,7 @@
 		//	pinctrl-1 = <&blsp1_uart2_sleep>;
 		//};
 
-		usb@78d9000 {
+		&otg {
 			status = "okay";
 			extcon = <&usb_id>, <&usb_id>;
 
@@ -120,7 +120,7 @@
 			pinctrl-0 = <&usb_id_default>;
 		};
 
-		wcnss@a21b000 {
+		&pronto {
 			status = "okay";
 
 			iris {
@@ -128,9 +128,9 @@
 			};
 		};
 
-		mdss@1a00000 {
+		&mdss {
 			status = "ok";
-			dsi@1a98000 {
+			&dsi0 {
 				#address-cells = <1>;
 				#size-cells = <0>;
 
@@ -138,25 +138,20 @@
 				vddio-supply = <&pm8916_l6>;
 			};
 
-			dsi-phy@1a98300 {
+			&dsi_phy0 {
 				vddio-supply = <&pm8916_l6>;
 				qcom,dsi-phy-regulator-ldo-mode;
 			};
 		};
 
-		i2c@78b9000 {
+		&i2c_5 {
 			atmel-maxtouch@4a {
 				status = "okay";
 				compatible = "atmel,maxtouch";
 				reg = <0x4a>;
-				pinctrl-names = "default";
-				pinctrl-0 = <&ts_pins>;
 				interrupt-parent = <&msmgpio>;
 				interrupts = <13 0x2008>;
-				reset-gpios = <&msmgpio 12 GPIO_ACTIVE_LOW>;
-				touchscreen-size-x = <1080>;
-				touchscreen-size-y = <1920>;
-				wakeup-source;
+				reset-gpios = <&msmgpio 12 GPIO_ACTIVE_HIGH>;
 			};
 		};
 
@@ -198,74 +193,7 @@
                         drive-strength = <8>;
                         bias-pull-up;
                 };
-        };
-
-    ts_pins: ts_pins {
-		ts_int_active: pmx_ts_int_active {
-			pinmux {
-				pins = "gpio13";
-				function = "gpio";
-			};
-			
-			pinconf {
-				pins = "gpio13";
-				drive-strength = <16>;
-				bias-pull-up;
-			};
-		};
-
-		ts_int_suspend: pmx_ts_int_suspend {
-			pinmux {
-				pins = "gpio13";
-				function = "gpio";
-			};
-
-			pinconf {
-				pins = "gpio13";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-
-		ts_reset_active: pmx_ts_reset_active {
-			pinmux {
-				pins = "gpio12";
-				function = "gpio";
-			};
-
-			pinconf {
-				pins = "gpio12";
-				drive-strength = <16>;
-				bias-pull-up;
-			};
-		};
-
-		ts_reset_suspend: pmx_ts_reset_suspend {
-			pinmux {
-				pins = "gpio12";
-				function = "gpio";
-			};
-
-			pinconf {
-				pins = "gpio12";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-
-		ts_release: pmx_ts_release {
-			pinmux{
-				pins = "gpio13", "gpio12";
-				label = "pmx_ts_release";
-			};
-			
-			pinconf {
-				pins = "gpio13", "gpio12";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-	};    
+        };    
 
 	pmx_mdss {
 		mdss_default: mdss_default {
@@ -342,6 +270,7 @@
 	l6 {
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <1800000>;
+		regulator-always-on;
 	};
 
 	l7 {
